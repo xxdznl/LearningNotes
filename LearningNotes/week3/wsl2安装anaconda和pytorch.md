@@ -184,7 +184,7 @@ conda install --use-local pytorch-1.12.0-py3.8_cuda11.6_cudnn8.3.2_0.tar.bz2(xxx
 
 - 在命令行输入`python`
 - 输入`import torch`，没有报错说明安装成功
-- torch.__version__
+- torch.\__version\_\_
 
 ### 检验是否可以使用GPU
 
