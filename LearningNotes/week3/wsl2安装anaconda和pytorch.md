@@ -220,7 +220,7 @@ OSError: libmkl_intel_lp64.so: cannot open shared object file: No such file or d
 
 因为我手动通过包文件安装了pytorch，之前的conda install pytorch没有执行成功，所以对应的依赖mkl也没有安装成功。
 
-~~重新运行conda install pytorch便可解决。~~重新运行`conda install pytorch torchvision torchaudio cudatoolkit=11.6 -c pytorch -c conda-forge`。默认安装的是 10.2版本的pytorch，没有GPU
+~~重新运行conda install pytorch便可解决~~。重新运行`conda install pytorch torchvision torchaudio cudatoolkit=11.6 -c pytorch -c conda-forge`。默认安装的是 10.2版本的pytorch，没有GPU
 
 ### ubuntu换源
 
