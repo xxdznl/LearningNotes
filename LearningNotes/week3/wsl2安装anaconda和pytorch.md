@@ -6,7 +6,7 @@
 \\wsl$
 ```
 
-![1656985954249](G:\研一\LearningNotes\LearningNotes\week3\wsl2安装anaconda和pytorch.assets\1656985954249.png)
+![1656985954249](wsl2安装anaconda和pytorch.assets/1656985954249.png)
 
 # Ubuntu-20.04安装Anaconda
 
@@ -14,7 +14,7 @@
 
 [anaconda官方下载连接](https://www.anaconda.com/products/individual)
 
-![1657043834604](G:\研一\LearningNotes\LearningNotes\week3\wsl2安装anaconda和pytorch.assets\1657043834604.png)
+![1657043834604](wsl2安装anaconda和pytorch.assets/1657043834604.png)
 
 往下翻页找到linux版最新版anaconda 4.12.0下载。
 
@@ -26,7 +26,7 @@ bash Anaconda3-2022.05-Linux-x86_64.sh
 
 一路回车yes，后提示安装vs code。尝试安装提示网络不连通。
 
-![1657043227278](G:\研一\LearningNotes\LearningNotes\week3\wsl2安装anaconda和pytorch.assets\1657043227278.png)
+![1657043227278](wsl2安装anaconda和pytorch.assets/1657043227278.png)
 
 使用`conda -V`（V是大写）命令查看安装的conda版本提示`conda: command not found`。则是没有把conda加入系统路径中，使用下列路径把conda加入系统路径。
 
@@ -34,7 +34,7 @@ bash Anaconda3-2022.05-Linux-x86_64.sh
 export PATH=/home/xxdtql/anaconda3/bin/:$PATH
 ```
 
-![1657038808575](G:\研一\LearningNotes\LearningNotes\week3\wsl2安装anaconda和pytorch.assets\1657038808575.png)
+![1657038808575](wsl2安装anaconda和pytorch.assets/1657038808575.png)
 
 到这里conda下载及配置就完成了
 
@@ -62,7 +62,7 @@ custom_channels:
 
 ~~使用命令`conda config --show-sources`查看配置的所有源~~
 
-![1656987766406](G:\研一\LearningNotes\LearningNotes\week3\wsl2安装anaconda和pytorch.assets\1656987766406.png)
+![1656987766406](wsl2安装anaconda和pytorch.assets/1656987766406.png)
 
 创建一个新的环境，命名为pytorchGpu
 
@@ -82,7 +82,7 @@ conda create -n pytorchGpu python=3.8
 
 使用命令`nvidia-smi`查看CUDA版本，此处报错。
 
-![1656990628810](G:\研一\LearningNotes\LearningNotes\week3\wsl2安装anaconda和pytorch.assets\1656990628810.png)
+![1656990628810](wsl2安装anaconda和pytorch.assets/1656990628810.png)
 
 ## windows系统下安装英伟达驱动
 
@@ -94,11 +94,11 @@ conda create -n pytorchGpu python=3.8
 
 选择我的显卡版本
 
-### ![1656991461127](G:\研一\LearningNotes\LearningNotes\week3\wsl2安装anaconda和pytorch.assets\1656991461127.png)
+![1657012845629](wsl2安装anaconda和pytorch.assets/1657012845629.png)
 
 可以看到我的cuda版本是11.7
 
-![1657006615609](G:\研一\LearningNotes\LearningNotes\week3\wsl2安装anaconda和pytorch.assets\1657006615609.png)
+![1657006615609](wsl2安装anaconda和pytorch.assets/1657006615609.png)
 
 ## 安装CUDA Toolkit 11.7
 
@@ -106,7 +106,7 @@ conda create -n pytorchGpu python=3.8
 
 [CUDA历史版本(根据个人需要)](https://developer.nvidia.com/cuda-toolkit-archive)
 
-![1657038932411](G:\研一\LearningNotes\LearningNotes\week3\wsl2安装anaconda和pytorch.assets\1657038932411.png)
+![1657038932411](wsl2安装anaconda和pytorch.assets/1657038932411.png)
 
 ```
 wget https://developer.download.nvidia.com/compute/cuda/repos/wsl-ubuntu/x86_64/cuda-wsl-ubuntu.pinsudo mv cuda-wsl-ubuntu.pin /etc/apt/preferences.d/cuda-repository-pin-600sudo apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/wsl-ubuntu/x86_64/3bf863cc.pubsudo add-apt-repository "deb https://developer.download.nvidia.com/compute/cuda/repos/wsl-ubuntu/x86_64/ /"sudo apt-get updatesudo apt-get -y install cuda
@@ -125,7 +125,7 @@ export LD_LIBRARY_PATH=/usr/local/cuda-11.7/lib64${LD_LIBRARY_PATH:+:${LD_LIBRAR
 
 `nvcc -V`查看成功状态
 
-![1657039067271](G:\研一\LearningNotes\LearningNotes\week3\wsl2安装anaconda和pytorch.assets\1657039067271.png)
+![1657039067271](wsl2安装anaconda和pytorch.assets/1657039067271.png)
 
 ## 配置cudnn 11.6
 
@@ -152,7 +152,7 @@ sudo chmod a+r /usr/local/cuda-11.6/lib64/libcudnn*
 
 进入[pytorch官网](https://pytorch.org/get-started/locally/)，选择对应的下载版本。按要求安装cpu版本就行了。这里我想尝试下gpu版本。
 
-![1657007398785](G:\研一\LearningNotes\LearningNotes\week3\wsl2安装anaconda和pytorch.assets\1657007398785.png)
+![1657007398785](wsl2安装anaconda和pytorch.assets/1657007398785.png)
 
 ~~安装命令注意后面的-c pytorch不要，不然又换回国外源了~~
 
@@ -162,7 +162,7 @@ conda install pytorch torchvision torchaudio cudatoolkit=11.6 -c pytorch -c cond
 
 ~~当前通道没有torchaudio和cudatoolkit=11.6则在[anaconda官网]([:: Anaconda.org](https://anaconda.org/))上搜索~~
 
-![1657012845629](G:\研一\LearningNotes\LearningNotes\week3\wsl2安装anaconda和pytorch.assets\1657012845629.png)
+![1657012845629](wsl2安装anaconda和pytorch.assets/1657012845629.png)
 
 ```bash
 conda install -c conda-forge cudatoolkit
@@ -192,7 +192,7 @@ conda install --use-local pytorch-1.12.0-py3.8_cuda11.6_cudnn8.3.2_0.tar.bz2(xxx
 
 最后退出 `exit()`
 
-![1657042301085](G:\研一\LearningNotes\LearningNotes\week3\wsl2安装anaconda和pytorch.assets\1657042301085.png)
+![1657042301085](wsl2安装anaconda和pytorch.assets/1657042301085.png)
 
 ## 其他问题
 
@@ -208,7 +208,7 @@ conda install --use-local pytorch-1.12.0-py3.8_cuda11.6_cudnn8.3.2_0.tar.bz2(xxx
 
 ### ~~报错2~~
 
-![1657017484949](G:\研一\LearningNotes\LearningNotes\week3\wsl2安装anaconda和pytorch.assets\1657017484949.png)
+![1657017484949](wsl2安装anaconda和pytorch.assets/1657017484949.png)
 
 ~~缺少gcc环境 首先安装gcc`sudo apt install gcc`，然后`sudo apt-get update`进行更新~~
 
