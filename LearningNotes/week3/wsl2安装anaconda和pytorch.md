@@ -254,7 +254,7 @@ sudo apt-get update
 sudo apt-get upgrade
 ```
 
-还有`sudo apt install mlocate`
+~~还有`sudo apt install mlocate`~~
 
 ## 主要参考博客：
 
