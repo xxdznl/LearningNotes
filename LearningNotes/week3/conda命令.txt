@@ -1,0 +1,7 @@
+查看所有虚拟环境： conda info -e 
+
+启动虚拟环境：activate 环境名 结束虚拟环境 deactivate 环境名
+
+创建：conda create -n 环境名 ，如，conda create -n rcnn python=3.6
+
+删除：conda remove -n rcnn --all
