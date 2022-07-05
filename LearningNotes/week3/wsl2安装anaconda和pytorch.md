@@ -24,7 +24,7 @@
 bash Anaconda3-2022.05-Linux-x86_64.sh
 ```
 
-一路回车yes，后提示安装vs code。尝试安装提示网络不连通。
+~~一路回车yes，后提示安装vs code。尝试安装提示网络不连通~~。
 
 ![1657043227278](wsl2安装anaconda和pytorch.assets/1657043227278.png)
 
