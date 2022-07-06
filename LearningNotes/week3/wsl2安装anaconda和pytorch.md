@@ -12,7 +12,7 @@
 
 # Ubuntu-20.04安装Anaconda
 
-## 下载安装
+## 安装Anaconda
 
 [anaconda官方下载连接](https://www.anaconda.com/products/individual)
 
@@ -196,6 +196,45 @@ conda install --use-local pytorch-1.12.0-py3.8_cuda11.6_cudnn8.3.2_0.tar.bz2(xxx
 
 ![1657042301085](wsl2安装anaconda和pytorch.assets/1657042301085.png)
 
+## 安装JupyterLab
+
+**没明白这部分，应该装JupyterLab还是jupyter notebook。但是能用了**
+
+第一步：
+
+```bash
+#conda install -c conda-forge jupyterlab
+conda install jupyter notebook
+
+```
+
+关键是第二步，让 JupyterLab 自动打开宿主浏览器。打开配置文件`jupyter_notebook_config.py`。
+
+```bash
+jupyter notebook --generate-config
+```
+
+修改下面这如下一行
+
+```bash
+#启动时不自动打开浏览器 
+#解除对下面选项的注释，并将值设为 False。
+c.NotebookApp.open_browser = False
+#在 WSL 中自然是无法用浏览器打开 Jupyter，这时我们的 WSL 作为本地网的服务器，Jupyter 即是对外提供的服务，Windows 则是客户（Client）。为了允许从 Windows 的访问，我们修改以下两项。
+# 允许任何来源访问你的服务器
+c.NotebookApp.allow_origin = '*'
+# Notebook 服务器会监听所有的 IP 地址
+c.NotebookApp.ip = '0.0.0.0'
+```
+
+退回到主界面，在`~/.bashrc` 或`~/.zshrc`文件末尾添加，指定默认浏览器地址，其中，`/mnt/`之后的部分是你默认浏览器的在 Windows 上的地址。注意空格等字符要用反斜杠转义
+
+```text
+export BROWSER='/mnt/C/Program\ Files\ \(x86\)/Microsoft/Edge/Application/Microsoft\ Edge'
+```
+
+
+
 ## 其他问题
 
 执行import torch 报错
@@ -261,3 +300,5 @@ sudo apt-get upgrade
 ## 主要参考博客：
 
 [(19条消息) 【wsl2 windows10/11 安装 配置cuda及pytorch】_fyz_jkl的博客-CSDN博客_cuda pytorch](https://blog.csdn.net/fyz_jkl/article/details/122792853?utm_medium=distribute.wap_relevant.none-task-blog-2~default~baidujs_baidulandingword~default-12-122792853-blog-107641262.wap_blog_relevant_default&spm=1001.2101.3001.4242.7&utm_relevant_index=13)
+
+## 
