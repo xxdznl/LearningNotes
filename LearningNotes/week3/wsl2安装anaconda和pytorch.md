@@ -1,3 +1,5 @@
+[TOC]
+
 查看wsl2中的ubuntu文件目录**
 
 在windows文件目录中输入命令，如下图所示
@@ -94,7 +96,7 @@ conda create -n pytorchGpu python=3.8
 
 选择我的显卡版本
 
-![1657012845629](wsl2安装anaconda和pytorch.assets/1657012845629.png)
+![1657012845629](wsl2安装anaconda和pytorch.assets/1656991461127.png)
 
 可以看到我的cuda版本是11.7
 
