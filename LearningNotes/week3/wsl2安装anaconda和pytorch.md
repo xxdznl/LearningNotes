@@ -233,7 +233,20 @@ c.NotebookApp.ip = '0.0.0.0'
 export BROWSER='/mnt/C/Program\ Files\ \(x86\)/Microsoft/Edge/Application/Microsoft\ Edge'
 ```
 
+### **jupyter notebook添加Anaconda的虚拟环境：**
 
+注：需要在虚拟环境下输入
+
+ 命令行在窗口中利用pip安装ipykernel
+输入：`conda install ipykernel`
+在虚拟环境中利用pip安装ipykernel
+输入：`conda install -n env_name ipykernel`
+将环境写入notebook的kernel中
+输入：`python -m ipykernel install --user --n env_name --display-name "env_name"` 注：env_name是你的虚拟环境名字，例如我的是pytorchGpu。后面的name是你在jupyter notebook里面命名一个新的名字。
+建立Jupyter与anaconda环境的联系
+输入：`conda install nb_conda`
+
+第二个虚拟环境时，只用执行第三行的命令就行了
 
 ## 其他问题
 
@@ -259,9 +272,17 @@ export BROWSER='/mnt/C/Program\ Files\ \(x86\)/Microsoft/Edge/Application/Micros
 
 OSError: libmkl_intel_lp64.so: cannot open shared object file: No such file or directory
 
-因为我手动通过包文件安装了pytorch，之前的conda install pytorch没有执行成功，所以对应的依赖mkl也没有安装成功。
+~~因为我手动通过包文件安装了pytorch，之前的conda install pytorch没有执行成功，所以对应的依赖mkl也没有安装成功。~~ 不是这个原因，spikingjelly012环境压缩包安装pytorch也报这个错，还没有执行conda install pytorch，且报pytorch包不一致的错误
 
 ~~重新运行conda install pytorch便可解决~~。重新运行`conda install pytorch torchvision torchaudio cudatoolkit=11.6 -c pytorch -c conda-forge`。默认安装的是 10.2版本的pytorch，没有GPU
+
+### 报错4
+
+PackagesNotFoundError: The following packages are not available from current channels:
+
+  - cudatoolkit=11.6
+
+**解决办法 conda install -c conda-forge cudatoolkit**
 
 ### ubuntu换源
 
