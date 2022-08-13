@@ -250,7 +250,7 @@ net.step_mode = 's'          #初始化后
 SNN中的神经元其输出 $Y[t]$ 不仅仅与当前时刻的输入$ X[t] $有关，还与上一个时末的状态 $H[t−1] $有关，即 $Y[t]=f(X[t],H[t−1])$ 
 
 - net_s.v  当前时刻电压 
-- net_s.v_reset 惊喜电压
+- net_s.v_reset 静息电压
 - net_s.v_threshold 阈值电压
 - net_s.surrogate_function 替代函数
 
@@ -976,6 +976,89 @@ optional arguments:
   -tau TAU            parameter tau of LIF neuron
 ```
 
+命令行示例运行代码取`tau=2.0,T=100,batch_size=64,lr=1e-3`：
+
+```python
+python -m test -tau 2.0 -T 100 -device cuda:0 -b 6
+4 -epochs 10 -data-dir ./data -amp -opt adam -lr 1e-3 -j 8
+```
+
+### 自动混合精度(AMP) Automatic Mixed Precision
+
+[自动混合精度(AMP)](https://www.cnblogs.com/jimchen1218/p/14315008.html)[Automatic Mixed Precision](https://www.bing.com/ck/a?!&&p=6d2cae0ccfe2b88bJmltdHM9MTY1OTgzNjI2MiZpZ3VpZD0zOTk2NGU0Yi00M2Q2LTRmODEtYjg0Mi0wYzdjOGY2ODU0NTEmaW5zaWQ9NTE0MA&ptn=3&hsh=3&fclid=878591c4-15f1-11ed-aa83-054618d2d2bd&u=a1aHR0cHM6Ly9kZXZlbG9wZXIubnZpZGlhLmNvbS9hdXRvbWF0aWMtbWl4ZWQtcHJlY2lzaW9u&ntb=1)z
+
+2017年，NVIDIA研究了一种用于混合精度训练的方法，该方法在训练网络时将单精度（FP32）与半精度(FP16)结合在一起，并使用相同的超参数实现了与FP32几乎相同的精度。
+
+```python
+from torch.cuda import amp
+#代码中和AMP不相关的部分注释了
+scaler = None
+if args.amp:    #从命令行中传过来的参数amp为true就启用scaler
+    scaler = amp.GradScaler()
+for epoch in range(start_epoch, args.epochs):
+   #net.train()  训练模式下才更新参数
+   #for img, label in train_data_loader:
+       #optimizer.zero_grad()
+       #img = img.to(args.device)
+       #label = label.to(args.device)
+       #label_onehot = F.one_hot(label, 10).float()
+       if scaler is not None:
+           #这个区域下的代码使用混合精度run in mixed precision. 
+           with amp.autocast():
+               #out_fr = 0.
+               #for t in range(args.T):
+               #    encoded_img = encoder(img)#无状态的泊松编码器。输出脉冲的发放概率与输入 x 相同。将图片数据转为spike类型必须确保 0 <= x <= 1
+               #    out_fr += net(encoded_img)
+               #out_fr = out_fr / args.T #多个T取结果平均
+               #loss = F.mse_loss(out_fr, label_onehot)
+           #停止使用混合精度
+           scaler.scale(loss).backward()#计算梯度
+           scaler.step(optimizer)#1自动调用unscale，2如果检查到inf/NaN梯度数据，跳过执行optimizer.step()防止污染数据，否则调用optimizer.step()
+           scaler.update()# 更新 scale factor.
+```
+
+### 钩子
+
+为了节省显存（内存），pytorch在计算过程中不保存中间变量，包括中间层的特征图和非叶子张量的梯度等。有时对网络进行分析时需要查看或修改这些中间变量，此时就需要注册一个钩子（hook）来导出需要的中间变量。
+
+hook方法有四种:
+
+- torch.Tensor.register_hook()
+- torch.nn.Module.register_forward_hook()
+- torch.nn.Module.register_backward_hook()
+- torch.nn.Module.register_forward_pre_hook().
+
+[(21条消息) 深度学习中的四种钩子_人类高质量算法工程师的博客-CSDN博客](https://blog.csdn.net/qq_35037684/article/details/122311535)
+
+```python
+# 注册forward_hook
+output_layer = net2.layer[-1] # 输出层
+output_layer.v_seq = []
+output_layer.s_seq = []
+def save_hook(m, x, y):
+    m.v_seq.append(m.v.unsqueeze(0))#m.v当前层所有神经元的电压，tensor类型
+    m.s_seq.append(y.unsqueeze(0))
+
+output_layer.register_forward_hook(save_hook)
+encoder = encoding.PoissonEncoder()
+with torch.no_grad():
+    img, label = test_dataset[3]
+    img = img.to("cuda:0")
+    out_fr = 0.
+    for t in range(100):
+        encoded_img = encoder(img)
+        out_fr += net2(encoded_img)
+    out_spikes_counter_frequency = (out_fr / 100).cpu().numpy()
+    print(f'Firing rate: {out_spikes_counter_frequency}')
+
+    output_layer.v_seq = torch.cat(output_layer.v_seq)
+    output_layer.s_seq = torch.cat(output_layer.s_seq)
+    v_t_array = output_layer.v_seq.cpu().numpy().squeeze()  # v_t_array[i][j]表示神经元i在j时刻的电压值
+    np.save("v_t_array.npy",v_t_array)
+    s_t_array = output_layer.s_seq.cpu().numpy().squeeze()  # s_t_array[i][j]表示神经元i在j时刻释放的脉冲，为0或1
+    np.save("s_t_array.npy",s_t_array)
+```
 
 
-### 还有好多地方没看懂待补充......
+
+**读取Tensorboard数据 命令：**tensorboard --logdir logs/T100_b64_adam_lr0.001_amp/
