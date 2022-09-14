@@ -73,21 +73,6 @@ for episode_i in range(n_episode):
           PATH = './DqnOnCartPole-v0.pth'
           torch.save(agent.target_net.state_dict(), PATH)
           exit()
-          # count = 0
-          # while True:
-          #   state2 = torch.as_tensor(state,dtype=torch.float32)
-          #   state2 = state2.to("cuda:0")
-          #   a = agent.eval_net.action(state2)
-          #   state, r, done, info = env.step(a)
-          #   print(count,a)
-          #   count += 1
-          #   plt.imshow(env.render(mode='rgb_array'))# CHANGED
-          #   ipythondisplay.clear_output(wait=True) # ADDED
-          #   ipythondisplay.display(plt.gcf()) # ADDED
-
-          #   if done:
-          #     count = 0
-          #     env.reset()
 
         batch_state,  batch_action, batch_reward, batch_state_next, batch_done = agent.memory.sample()
         
