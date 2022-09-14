@@ -1,4 +1,3 @@
-from telnetlib import GA
 import numpy as np
 import random
 import torch
@@ -12,7 +11,7 @@ class ReplayMemory:
         self.MEMORY_SIZE = memory_size
         self.BATCH_SIZE = batch_size
 
-        self.all_state = np.empty(shape = (self.MEMORY_SIZE,self.n_state),dtype=np.float64) # float的精度可以改
+        self.all_state = np.empty(shape = (self.MEMORY_SIZE,self.n_state),dtype=np.float64) 
         self.all_action = np.random.randint(low=0,high=self.n_action,size=self.MEMORY_SIZE,dtype=np.uint8)
         self.all_reward = np.empty(self.MEMORY_SIZE,dtype=np.float64)
         self.all_state_next = np.empty(shape = (self.MEMORY_SIZE,self.n_state),dtype=np.float64)
@@ -49,7 +48,7 @@ class ReplayMemory:
         
         batch_state_tensor = torch.as_tensor(np.asarray(batch_state),dtype = torch.float32)
         batch_action_tensor = torch.as_tensor(np.asarray(batch_action),dtype = torch.int64).unsqueeze(-1)# 要与eval_Q维数匹配   torch.gather(input = eval_Q,dim= 1,index=batch_action)
-        batch_reward_tensor = torch.as_tensor(np.asarray(batch_reward),dtype = torch.float32).unsqueeze(-1)#??????????????/
+        batch_reward_tensor = torch.as_tensor(np.asarray(batch_reward),dtype = torch.float32).unsqueeze(-1)
         batch_state_next_tensor = torch.as_tensor(np.asarray(batch_state_next),dtype = torch.float32)
         batch_done_tensor = torch.as_tensor(np.asarray(batch_done),dtype = torch.float32).unsqueeze(-1)
         return batch_state_tensor, batch_action_tensor, batch_reward_tensor, batch_state_next_tensor, batch_done_tensor
