@@ -1,0 +1,2 @@
+g++ main.cpp CLThread.cpp  CLExecutiveFunctionMalloc.cpp CLExecutiveFunctionFree.cpp CLExecutiveFunctionProvider.cpp MAllocator.cpp buddy.cpp common.cpp  -o test -pthread
+./test
